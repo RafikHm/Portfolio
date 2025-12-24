@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAMIMI RAFIK | Engineering & Design</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GSAP for World Class Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --accent: #d4d4d8; /* Zinc 300 */
+            --bg: #09090b; /* Zinc 950 */
+            --card: #18181b; /* Zinc 900 */
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #fafafa;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .font-serif { font-family: 'Playfair Display', serif; }
+
+        /* Custom Cursor */
+        #cursor {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(24, 24, 27, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animated Gradient Background */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #09090b 70%);
+            opacity: 0.5;
+        }
+
+        /* Reveal Animations Initial State */
+        .reveal { 
+            opacity: 0; 
+            transform: translateY(30px); 
+            will-change: opacity, transform;
+        }
+
+        /* Project Card Hover */
+        .project-card img {
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .project-card:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Chatbot Transitions */
+        #chat-window {
+            transform: translateY(20px) scale(0.95);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #chat-window.active {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Page Transitions */
+        .page-container {
+            display: none;
+            opacity: 0;
+        }
+        .page-container.active {
+            display: block;
+        }
+
+        /* Smooth Scroll */
+        html { scroll-behavior: smooth; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+        
+        /* Hero Image Adjustment */
+        .hero-img {
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.1));
+            max-width: 300px;
+        }
+
+        /* Modal Styles */
+        #project-modal {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body class="loading">
+
+    <div id="cursor" class="hidden md:block"></div>
+    <div class="gradient-bg"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-6 flex justify-between items-center glass border-b-0">
+        <div class="text-xl font-bold tracking-tighter uppercase italic font-serif cursor-pointer" onclick="navigateTo('home')">Portfolio</div>
+        <div class="hidden md:flex gap-8 text-sm uppercase tracking-widest font-semibold opacity-70">
+            <a href="javascript:void(0)" onclick="navigateTo('all-projects')" class="hover:opacity-100 transition-opacity">Projects</a>
+            <a href="#about" onclick="navigateTo('home')" class="hover:opacity-100 transition-opacity">Background</a>
+            <a href="#services" onclick="navigateTo('home')" class="hover:opacity-100 transition-opacity">Skills</a>
+            <a href="#contact" onclick="navigateTo('home')" class="hover:opacity-100 transition-opacity">Contact</a>
+        </div>
+        <button onclick="document.getElementById('contact').scrollIntoView(); navigateTo('home')" class="bg-white text-black px-5 py-2 rounded-full text-xs font-bold uppercase tracking-tighter hover:scale-105 transition-transform">
+            Get in Touch
+        </button>
+    </nav>
+
+    <!-- HOME PAGE -->
+    <main id="home-page" class="page-container active">
+        <!-- Hero Section -->
+        <section class="h-screen flex flex-col justify-center items-center text-center px-6 relative">
+            <div class="hero-content flex flex-col md:flex-row items-center gap-8 md:gap-16">
+                <div class="text-center md:text-left">
+                    <p class="text-zinc-500 uppercase tracking-[0.3em] text-xs mb-4 reveal">Reservoir Engineer & UI/UX devloper</p>
+                    <h1 class="text-6xl md:text-8xl font-serif mb-8 leading-tight reveal">
+                        Hamimi Rafik<br><span class="italic text-zinc-400">Abdelmoula</span>
+                    </h1>
+                    <div class="flex gap-4 justify-center md:justify-start reveal">
+                        <a href="javascript:void(0)" onclick="navigateTo('all-projects')" class="bg-white text-black px-8 py-4 rounded-full font-bold flex items-center gap-2 hover:gap-4 transition-all">
+                            View Portfolio <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="reveal">
+                    <img src="ChatGPT Image Dec 22, 2025, 09_03_19 PM.png" alt="Hamimi Rafik" class="hero-img rounded-2xl grayscale hover:grayscale-0 transition-all duration-700">
+                </div>
+            </div>
+            
+            <div class="absolute bottom-10 animate-bounce opacity-30">
+                <i data-lucide="chevron-down"></i>
+            </div>
+        </section>
+
+        <!-- Portfolio Preview Section -->
+        <section id="work" class="py-24 px-6 md:px-24">
+            <div class="flex justify-between items-end mb-16">
+                <div>
+                    <h2 class="text-4xl md:text-6xl font-serif reveal"> My Projects.</h2>
+                    <p class="text-zinc-500 mt-4 reveal">Where engineering precision meets digital innovation</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Project 1 (Navigation Enhanced) -->
+                <div class="project-card group cursor-pointer reveal" onclick="navigateTo('all-projects')">
+                    <div class="overflow-hidden rounded-2xl aspect-[4/3] bg-zinc-900 mb-6 relative">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-end p-8">
+                            <span class="text-white font-bold tracking-widest">VIEW ALL PROJECTS</span>
+                        </div>
+                        <img src="128e2068222c55c941e4342e851d831d.jpg" alt="Python Desktop App" class="w-full h-full object-cover grayscale group-hover:grayscale-0">
+                    </div>
+                    <h3 class="text-2xl font-serif">Z-Factor Calculator</h3>
+                    <p class="text-zinc-500 text-sm mt-2">Desktop Python Application • Gas non hydrocarbon Properties Analysis</p>
+                </div>
+
+                <!-- Project 2 (Navigation Enhanced) -->
+                <div class="project-card group cursor-pointer reveal" onclick="navigateTo('all-projects')">
+                    <div class="overflow-hidden rounded-2xl aspect-[4/3] bg-zinc-900 mb-6 relative">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-end p-8">
+                            <span class="text-white font-bold tracking-widest">VIEW ALL PROJECTS</span>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?auto=format&fit=crop&q=80&w=1200" alt="Web Design" class="w-full h-full object-cover grayscale group-hover:grayscale-0">
+                    </div>
+                    <h3 class="text-2xl font-serif">Modern and professional website</h3>
+                    <p class="text-zinc-500 text-sm mt-2">Frontend Development • HTML/CSS/JS</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-32 bg-zinc-900/50">
+            <div class="max-w-4xl mx-auto px-6 text-center">
+                <h2 class="text-zinc-500 uppercase tracking-widest text-xs mb-8 reveal">My Academic Journey.</h2>
+                <p class="text-2xl md:text-4xl font-serif leading-relaxed reveal">
+                    Currently pursuing my 3rd year at the <span class="italic text-zinc-400">University of Boumerdes</span>, specializing in Reservoir Engineering at the Faculty of Hydrocarbons and Chemistry.
+                </p>
+                <div class="mt-12 flex justify-center gap-12 text-zinc-400 font-semibold reveal">
+                    <div class="flex flex-col"><span class="text-white text-3xl">3rd</span> Year Univ.</div>
+                    <div class="flex flex-col"><span class="text-white text-3xl">FHC</span> Faculty</div>
+                    <div class="flex flex-col"><span class="text-white text-3xl">Python</span> Dev.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services -->
+        <section id="services" class="py-24 px-6 md:px-24">
+            <h2 class="text-4xl md:text-6xl font-serif mb-16 reveal">Core Competencies.</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="glass p-8 rounded-3xl reveal border-zinc-800 hover:border-zinc-500 transition-colors">
+                    <i data-lucide="terminal" class="mb-6 w-8 h-8 text-zinc-400"></i>
+                    <h3 class="text-lg font-bold mb-2">Python</h3>
+                    <p class="text-zinc-500 text-sm">Intermediate scripting for engineering calculations and desktop applications.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl reveal border-zinc-800 hover:border-zinc-500 transition-colors">
+                    <i data-lucide="layout" class="mb-6 w-8 h-8 text-zinc-400"></i>
+                    <h3 class="text-lg font-bold mb-2">UI/UX Design</h3>
+                    <p class="text-zinc-500 text-sm">Crafting clean web interfaces with HTML, CSS, and modern JavaScript.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl reveal border-zinc-800 hover:border-zinc-500 transition-colors">
+                    <i data-lucide="box" class="mb-6 w-8 h-8 text-zinc-400"></i>
+                    <h3 class="text-lg font-bold mb-2">SolidWorks</h3>
+                    <p class="text-zinc-500 text-sm">Computer-aided design and 3D modeling for technical equipment.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl reveal border-zinc-800 hover:border-zinc-500 transition-colors">
+                    <i data-lucide="droplet" class="mb-6 w-8 h-8 text-zinc-400"></i>
+                    <h3 class="text-lg font-bold mb-2">Reservoir Eng.</h3>
+                    <p class="text-zinc-500 text-sm">Deep focus on hydrocarbon properties and reservoir modeling.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Get in Touch Section -->
+        <section id="contact" class="py-32 px-6 md:px-24 border-t border-zinc-900 bg-zinc-950/50">
+            <div class="max-w-6xl mx-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">
+                    <div class="space-y-8">
+                        <div class="reveal">
+                            <span class="text-zinc-500 uppercase tracking-[0.3em] text-xs">Available for Collaborations</span>
+                            <h2 class="text-6xl md:text-8xl font-serif mt-4 leading-none">Let's <span class="italic text-zinc-400">Connect</span>.</h2>
+                        </div>
+                        <p class="text-zinc-400 text-lg reveal max-w-md">Whether it's a reservoir engineering challenge or a creative digital project, I'm always open to discussing new ideas.</p>
+                        
+                        <div class="flex gap-6 reveal">
+                            <a href="linkedin.com/in/rafik-hamimi-84a41935" class="w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300">
+                                <i data-lucide="linkedin" class="w-5 h-5"></i>
+                            </a>
+                            <a href="https://www.instagram.com/ixsusix?igsh=NXQza3ozMXZ6cDBr" class="w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300">
+                                <i data-lucide="instagram" class="w-5 h-5"></i>
+                            </a>
+                            <a href="mailto:lsifer795@gmail.com" class="w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300">
+                                <i data-lucide="mail" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+
+                        <div class="pt-8 border-t border-zinc-900 reveal">
+                            <div class="flex items-center gap-4 text-zinc-500">
+                                <i data-lucide="map-pin" class="w-4 h-4"></i>
+                                <span class="text-sm uppercase tracking-widest">Bouira, Algeria</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reveal">
+                        <div class="glass p-8 md:p-12 rounded-[2.5rem] border-zinc-800 shadow-2xl relative overflow-hidden">
+                            <!-- Subtle decorative element -->
+                            <div class="absolute -top-24 -right-24 w-48 h-48 bg-white/5 blur-3xl rounded-full"></div>
+                            
+                            <form id="contact-form" class="space-y-6 relative z-10">
+                                <div class="space-y-2">
+                                    <label class="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold ml-1">Full Name</label>
+                                    <input type="text" placeholder="Full Name" required class="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl px-6 py-4 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all placeholder:opacity-30">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold ml-1">Email Address</label>
+                                    <input type="email" placeholder="Example@gmail.com" required class="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl px-6 py-4 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all placeholder:opacity-30">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold ml-1">Message</label>
+                                    <textarea rows="4" placeholder="How can I help you?" required class="w-full bg-zinc-900/50 border border-zinc-800 rounded-2xl px-6 py-4 focus:outline-none focus:border-zinc-400 focus:ring-1 focus:ring-zinc-400 transition-all placeholder:opacity-30"></textarea>
+                                </div>
+                                <button type="submit" class="group w-full bg-white text-black font-bold py-5 rounded-2xl hover:bg-zinc-200 transition-all flex items-center justify-center gap-3 overflow-hidden">
+                                    <span class="uppercase tracking-widest text-sm">Send Inquiry</span>
+                                    <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                                </button>
+                                <div id="form-feedback" class="text-center text-xs uppercase tracking-widest text-zinc-500 h-4 opacity-0 transition-opacity">Message sent successfully</div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ALL PROJECTS PAGE -->
+    <main id="all-projects-page" class="page-container py-32 px-6 md:px-24">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-8">
+                <div class="reveal">
+                    <button onclick="navigateTo('home')" class="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors uppercase tracking-widest text-xs mb-8">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Home
+                    </button>
+                    <h2 class="text-6xl md:text-8xl font-serif leading-none">All <span class="italic text-zinc-400">Projects</span>.</h2>
+                </div>
+                <p class="text-zinc-500 max-w-sm reveal">A comprehensive look at my work across engineering and design.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="project-card glass p-4 rounded-[2rem] reveal cursor-pointer group" onclick="openModal('z-factor')">
+                    <div class="overflow-hidden rounded-2xl aspect-video bg-zinc-900 mb-6 relative">
+                        <img src="Capture2.PNG" class="w-full h-full object-cover grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="px-2 pb-4">
+                        <span class="text-[10px] uppercase tracking-widest text-zinc-500">Desktop Engineering</span>
+                        <h3 class="text-xl font-serif mt-1">Z-Factor Calculator</h3>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-card glass p-4 rounded-[2rem] reveal cursor-pointer group" onclick="openModal('ui-ux')">
+                    <div class="overflow-hidden rounded-2xl aspect-video bg-zinc-900 mb-6 relative">
+                        <img src="Capture.PNG" class="w-full h-full object-cover grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="px-2 pb-4">
+                        <span class="text-[10px] uppercase tracking-widest text-zinc-500">Frontend Design</span>
+                        <h3 class="text-xl font-serif mt-1">Personal Portfolio</h3>
+                    </div>
+                </div>
+
+                <!-- Project 3 (Mock) -->
+                <div class="project-card glass p-4 rounded-[2rem] reveal cursor-pointer group" onclick="openModal('reservoir')">
+                    <div class="overflow-hidden rounded-2xl aspect-video bg-zinc-900 mb-6 relative">
+                        <img src="Capture3.PNG" class="w-full h-full object-cover grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="px-2 pb-4">
+                        <span class="text-[10px] uppercase tracking-widest text-zinc-500">website for your work</span>
+                        <h3 class="text-xl font-serif mt-1">Website</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Project Detail Modal -->
+    <div id="project-modal" class="fixed inset-0 z-[100] glass flex items-center justify-center p-6">
+        <div class="bg-zinc-950 w-full max-w-4xl rounded-[3rem] border border-zinc-800 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+            <div class="p-8 border-b border-zinc-900 flex justify-between items-center">
+                <h4 id="modal-title" class="text-3xl font-serif">Project Title</h4>
+                <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-8 md:p-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div id="modal-image" class="rounded-3xl aspect-[4/3] bg-zinc-900 overflow-hidden">
+                        <img src="" class="w-full h-full object-cover">
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">The Challenge</span>
+                            <p id="modal-desc" class="text-zinc-400 mt-2 leading-relaxed">Detailed description will appear here.</p>
+                        </div>
+                        <div>
+                            <span class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Technologies</span>
+                            <div id="modal-tech" class="flex flex-wrap gap-2 mt-3">
+                                <!-- Tech tags -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-zinc-900 px-6 md:px-24 flex flex-col md:flex-row justify-between items-center gap-8 opacity-50 text-xs uppercase tracking-widest">
+        <p>© 2024 Hamimi Rafik Abdelmoula</p>
+        <div class="flex gap-8">
+            <a href="#">Faculty of Hydrocarbons and chemistry </a>
+            <a href="#">University of Boumerdes</a>
+        </div>
+        <p>Engineering & Design</p>
+    </footer>
+
+    <!-- Chatbot remains unchanged -->
+    <div class="fixed bottom-6 right-6 z-[100]">
+        <div id="chat-window" class="absolute bottom-20 right-0 w-[350px] max-w-[90vw] glass rounded-3xl overflow-hidden shadow-2xl flex flex-col">
+            <div class="p-6 bg-white text-black flex justify-between items-center">
+                <div>
+                    <h4 class="font-bold">Rafik's Bot</h4>
+                    <p class="text-[10px] uppercase opacity-60">Online • Engineering Support</p>
+                </div>
+                <button onclick="toggleChat()" class="p-2 hover:bg-black/5 rounded-full"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <div id="chat-messages" class="h-80 overflow-y-auto p-6 space-y-4 flex flex-col text-sm">
+                <div class="bg-zinc-800 self-start p-3 rounded-2xl rounded-bl-none max-w-[80%]">
+                    Hello! I'm Rafik's assistant. Would you like to see his projects or contact him directly?
+                </div>
+            </div>
+            <div class="p-4 border-t border-zinc-800 flex gap-2">
+                <input id="chat-input" type="text" placeholder="Type your inquiry..." class="flex-1 bg-zinc-900 border border-zinc-800 rounded-full px-4 py-2 text-xs focus:outline-none focus:border-zinc-400">
+                <button onclick="sendMessage()" class="bg-white text-black p-2 rounded-full hover:scale-110 transition-transform"><i data-lucide="send" class="w-4 h-4"></i></button>
+            </div>
+        </div>
+        <button id="chat-toggle" onclick="toggleChat()" class="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-all duration-300 group">
+            <i data-lucide="message-square" class="w-6 h-6 group-hover:hidden"></i>
+            <i data-lucide="chevron-down" class="w-6 h-6 hidden group-hover:block"></i>
+        </button>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        gsap.registerPlugin(ScrollTrigger);
+
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, {
+                x: e.clientX - 10,
+                y: e.clientY - 10,
+                duration: 0.1,
+                ease: 'power2.out'
+            });
+        });
+
+        // Navigation Logic
+        function navigateTo(pageId) {
+            const current = document.querySelector('.page-container.active');
+            const target = document.getElementById(pageId + '-page');
+
+            if (current === target) return;
+
+            window.scrollTo({ top: 0, behavior: 'instant' });
+
+            gsap.to(current, {
+                opacity: 0,
+                y: 10,
+                duration: 0.4,
+                ease: 'power2.in',
+                onComplete: () => {
+                    current.classList.remove('active');
+                    target.classList.add('active');
+                    gsap.fromTo(target, {
+                        opacity: 0,
+                        y: 20
+                    }, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.6,
+                        ease: 'power3.out',
+                        onComplete: () => {
+                            ScrollTrigger.refresh();
+                            initReveals();
+                        }
+                    });
+                }
+            });
+        }
+
+        // Animation Init
+        function initReveals() {
+            const page = document.querySelector('.page-container.active');
+            const reveals = page.querySelectorAll('.reveal');
+            
+            reveals.forEach(el => {
+                gsap.set(el, { opacity: 0, y: 30 });
+                gsap.to(el, {
+                    scrollTrigger: {
+                        trigger: el,
+                        start: 'top 90%',
+                        toggleActions: 'play none none none'
+                    },
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: 'power3.out'
+                });
+            });
+        }
+
+        // Project Data
+        const projects = {
+            'z-factor': {
+                title: 'Z-Factor Calculator',
+                desc: 'A robust desktop application built to calculate gas compressibility factors (Z) for reservoir fluids. This tool handles non-hydrocarbon components with high precision, essential for accurate material balance calculations.',
+                image: '128e2068222c55c941e4342e851d831d.jpg',
+                tech: ['Python', 'PySide', 'NumPy', 'Matplotlib']
+            },
+            'ui-ux': {
+                title: 'Personal Portfolio website',
+                desc: 'A design study on integrating engineering aesthetics into modern web experiences. This project focuses on high-performance animations and glassmorphism to create a premium user experience.',
+                image: 'Capture.PNG',
+                tech: ['CSS', 'GSAP', 'Lucide', 'JavaScript']
+            },
+            'reservoir': {
+                title: 'website for you work',
+                desc: 'Modern and profesional website for you buisness or work with an Ai chatboot.',
+                image: 'Capture3.PNG',
+                tech: ['Html', 'css', 'javascript']
+            }
+        };
+
+        function openModal(id) {
+            const data = projects[id];
+            document.getElementById('modal-title').textContent = data.title;
+            document.getElementById('modal-desc').textContent = data.desc;
+            document.getElementById('modal-image').querySelector('img').src = data.image;
+            
+            const techContainer = document.getElementById('modal-tech');
+            techContainer.innerHTML = '';
+            data.tech.forEach(t => {
+                const tag = document.createElement('span');
+                tag.className = 'px-4 py-2 rounded-full glass text-[10px] uppercase tracking-widest text-zinc-300';
+                tag.textContent = t;
+                techContainer.appendChild(tag);
+            });
+
+            const modal = document.getElementById('project-modal');
+            modal.style.display = 'flex';
+            gsap.to(modal, { opacity: 1, duration: 0.4 });
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('project-modal');
+            gsap.to(modal, {
+                opacity: 0, 
+                duration: 0.3, 
+                onComplete: () => {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+
+        // Form Handling
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const feedback = document.getElementById('form-feedback');
+            
+            gsap.to(btn, { scale: 0.95, opacity: 0.7, duration: 0.2 });
+            
+            setTimeout(() => {
+                feedback.style.opacity = '1';
+                e.target.reset();
+                gsap.to(btn, { scale: 1, opacity: 1, duration: 0.4 });
+                setTimeout(() => { feedback.style.opacity = '0'; }, 3000);
+            }, 1000);
+        });
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            initReveals();
+        });
+
+        // Chatbot logic (preserved)
+        function toggleChat() { document.getElementById('chat-window').classList.toggle('active'); }
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const messages = document.getElementById('chat-messages');
+            if (!input.value.trim()) return;
+            const userMsg = document.createElement('div');
+            userMsg.className = 'bg-white text-black self-end p-3 rounded-2xl rounded-br-none max-w-[80%]';
+            userMsg.textContent = input.value;
+            messages.appendChild(userMsg);
+            input.value = '';
+            messages.scrollTop = messages.scrollHeight;
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = 'bg-zinc-800 self-start p-3 rounded-2xl rounded-bl-none max-w-[80%]';
+                botMsg.textContent = "Thanks! Rafik will get back to you soon.";
+                messages.appendChild(botMsg);
+                messages.scrollTop = messages.scrollHeight;
+            }, 1000);
+        }
+
+        document.querySelectorAll('a, button, .project-card').forEach(el => {
+            el.addEventListener('mouseenter', () => gsap.to(cursor, { scale: 3, duration: 0.3 }));
+            el.addEventListener('mouseleave', () => gsap.to(cursor, { scale: 1, duration: 0.3 }));
+        });
+    </script>
+</body>
+</html>
